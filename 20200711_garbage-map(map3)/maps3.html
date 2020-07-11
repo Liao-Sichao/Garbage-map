@@ -1,0 +1,37 @@
+<!DOCTYPE> 
+<html>
+  <head>
+    <title>GarbageMap</title>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyD0dcnYC83XwLuNCkQf89BblAtQQ7btKXA&amp;language=ja""></script>
+    <script src="js/maps3.js" type="text/javascript"></script>
+  </head>
+  <body onload="initialize()">
+    <form name="test">
+	<input type="file" id="selfile"><br>
+	<textarea name="txt" rows="10" cols="40" readonly></textarea>
+    </form>
+
+    <script>
+	var obj1 = document.getElementById("selfile");
+
+	//ダイアログでファイルが選択された時
+	obj1.addEventListener("change",function(evt){
+  		var file = evt.target.files;
+		//FileReaderの作成
+  		var reader = new FileReader();
+  		//テキスト形式で読み込む
+  		reader.readAsText(file[0]);
+  
+  		//読込終了後の処理
+  		reader.onload = function(ev){
+    		//テキストエリアに表示する
+  		var separatorString = ",";
+  		var arrayStrig = reader.result.split(separatorString);
+  		document.test.txt.value = arrayStrig[0];
+  	}
+    },false);
+</script>
+    <p>GarbageMap</p>
+    <div id="map_canvas" style="width:700px; height:500px"></div>
+  </body>
+</html>

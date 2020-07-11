@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Responsible Clickable Map</title>
+    <style>
+    	#map{
+    		width: 100%;
+    		max-width: 1280px;
+    		min-width: 320px;
+    		margin: 0 auto;
+    	}
+    	#map img{
+    		display: block;
+    		width: 100%;
+    	}
+    </style>
+  </head>
+  <body>
+  	<div id="map">
+  		<img id="targetImage" src="map.jpg" usemap="#ImageMap" alt="" />
+  		<map name="ImageMap">
+  			<area shape="poly" coords="541,22,684,23,704,33,705,127,703,141,687,148,602,149,593,155,590,167,573,179,532,177,522,159,523,44,530,28,530,28" href="#" alt="" />
+  			<area shape="poly" coords="615,159,657,158,673,171,676,191,675,511,662,526,653,529,624,530,620,522,618,505,608,492,576,492,568,500,568,518,560,530,404,532,392,519,391,507,391,463,375,445,367,445,279,445,259,441,259,427,260,354,275,337,408,337,417,328,417,310,428,298,457,298,466,305,469,318,468,324,475,323,478,297,482,291,502,292,511,295,522,289,522,218,532,199,545,195,601,196,603,175,608,164,608,164" href="#" alt="" />
+  			<area shape="poly" coords="271,453,370,454,380,465,379,520,370,528,270,528,260,519,259,467,263,459,263,459" href="#" alt="" />
+  			<area shape="poly" coords="151,353,222,354,246,367,252,386,247,510,237,518,227,522,213,523,213,544,210,553,198,561,137,562,124,545,125,381,131,364,131,364" href="#" alt="" />
+  			<area shape="poly" coords="82,497,101,498,113,508,114,567,111,578,98,583,78,583,65,573,66,512,72,501,72,501" href="#" alt="" />
+  		</map>
+  	</div>
+  </body>
+  <script>
+  	const area = document.getElementsByTagName('area'); // areaタグ取得
+    const baseCoords = setBaseCoords(); // クリッカブルのパスデータを配列化（これがベースとなる）
+ 
+    function setBaseCoords () {
+    	let array = [];
+    	for (key in area) { // areaタグの数だけループ
+	  		let tmp = [];
+	    	if (Number.isInteger(Number(key))) { // 簡易数値チェック
+	    		tmp = area[key].coords.split(',');
+	    		array.push(tmp);
+	    	}
+	    }
+	    return array;
+    }
+ 
+    let imageWidth;
+    let imageHeight;
+    let aspect;
+ 
+    let image = new Image();
+    image.onload = function () { // ターゲット画像読み込み完了
+    	imageWidth = image.width; // 画像のオリジナル横幅
+    	imageHeight = image.height; // 画像のオリジナル縦幅
+    	aspect = imageHeight / imageWidth; // オリジナル画像のアスペクト
+    	getCoords();
+    }
+    image.src = document.getElementById('targetImage').src;
+ 
+    // 可変幅に合わせてcoordsを算出
+    function getCoords () {
+    	let targetWidth = document.getElementById('map').clientWidth; // ターゲット要素の横幅取得
+    	let rateX = targetWidth / imageWidth // X座標比率
+      let rateY = (targetWidth * aspect) / imageHeight // Y座標比率
+    	for (key in area) { // areaタグの数だけループ
+    		let coords = [];
+    		if (Number.isInteger(Number(key))) { // 簡易数値チェック
+	    		baseCoords[key].forEach( function (value, index) {
+	    			coords[index] = (index % 2 === 0) ? Math.floor(value * rateX) : Math.floor(value * rateY);
+	    		})
+	    		document.getElementsByTagName('area')[key].coords = coords
+	    	}
+			}
+    }
+ 
+    // リサイズ
+    window.addEventListener('resize', function (event) {
+    	getCoords();
+    })
+ 
+  </script>
+</html>

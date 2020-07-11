@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>XMLHttpRequest()‚ÌŠî–{</title>
+<script type="text/javascript">
+function loadTextFile()
+{
+httpObj = new XMLHttpRequest();
+httpObj.onload = displayData;
+httpObj.open("GET","output.txt",true);
+httpObj.send(null);
+}
+function displayData()
+{
+document.ajaxForm.result.value = httpObj.responseText;
+}
+</script>
+</head>
+<body>
+<h1>XMLHttpRequest()‚ÌŠî–{ (IEˆÈŠO)</h1>
+<form name="ajaxForm">
+<input type="button" value="“Ç‚Ýž‚Ý" onClick="loadTextFile()"><br>
+<textarea name="result" cols="40" rows="5"></textarea>
+</form>
+</body>
+</html>
